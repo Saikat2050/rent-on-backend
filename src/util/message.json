@@ -1,0 +1,21 @@
+{
+    "USEREXISTS": "User is already registered, Please try another email-ID or log in with credentials",
+    "USERCREATED": "User is Created Successfully",
+    "USERLOGGEDIN": "User is Logged In Successfully",
+    "USERUPDATED": "User Updated Successfully",
+    "USERDELETED": "User Deleted Successfully",
+    "USERNOTEXISTS": "User is not registered, Please sign Up first",
+    "MISMATCH": "Email ID or Password mismatch",
+    "USERNOTVERIFIED": "User is not verified, please verify the user first",
+    "MAILSENT": "Mail sent Successfully",
+    "OTPMISMATCH": "Please enter the correct OTP sent to your Email ID",
+    "OTPVERIFIED": "OTP verified Successfully",
+    "NOTFOUND": "OOPS!!! Page not found...",
+    "SELLERROLE": "You are not logged in as a Seller",
+    "DATASUCCESS": "Data Added Successfully",
+    "DATAUPDATE": "Data Updated Successfully",
+    "DATADELETED": "Data Deleted Successfully",
+    "DATAMISSING": "Data not found",
+    "DEFAULTER": "Sorry, this service is not available. Please check after some time",
+    "DATALIST": "Data fetched successfully"
+}
