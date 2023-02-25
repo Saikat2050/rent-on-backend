@@ -43,7 +43,7 @@ class itemController {
     async itemList(req, res) {
         try {
             const filter = req.body.filter
-            const sort = req.body.sort ?? { createdAt: 1 }
+            const sort = req.body.sort ?? { createdAt: -1 }
             const pageSize = req.body.pageSize ?? 10
             const page = req.body.page ?? 1
 

@@ -5,6 +5,5 @@ router.post('/sign-up', userController.signUp)
 router.post('/sign-in', userController.signIn)
 router.post('/send-otp', userController.sendOtp)
 router.post('/verify-otp', userController.verifyOtp)
-router.post('/test', userController.testAPI)
 
 module.exports = router
