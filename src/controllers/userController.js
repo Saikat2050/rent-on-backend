@@ -11,6 +11,7 @@ class UserController {
         this.signIn = this.signIn.bind(this)
         this.sendOtp = this.sendOtp.bind(this)
         this.verifyOtp = this.verifyOtp.bind(this)
+        this.testAPI= this.testAPI.bind(this)
     }
 
     async signUp(req, res) {
@@ -125,6 +126,10 @@ class UserController {
             console.log("Some Error Occurred: ", err.message)
             return res.status(400).json({ Status: "Error", Message: err.message })
         }
+    }
+
+    async testAPI(req, res) {
+         return res.status(200).json({Message: "success", Data: message.DATALIST, One: "ss"})
     }
 }
 
