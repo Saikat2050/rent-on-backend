@@ -24,15 +24,7 @@ class UserController {
 
             // create encrypted password
             req.body.password = await bcrypt.hash(req.body.password, parseInt(saltRounds))
-            const user = new User()
-            user.name = req.body.name
-            user.email = req.body.email 
-            user.password = req.body.password
-            user.mobile = req.body.mobile
-            user.address = req.body.address
-            user.roleId = req.body.roleId
-            await user.save()
-            // const user = await User.insertMany([req.body])
+            const user = await User.insertMany([req.body])
 
             return res.status(200).json({ Status: "Success", Message: message.USERCREATED, Data: user })
         }
