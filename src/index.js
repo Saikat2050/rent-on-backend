@@ -21,8 +21,4 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(router)
 
-app.use('*', (req, res) => {
-    return res.status(404).json({Status: "Error", Message: message.NOTFOUND});
-  });
-
 app.listen(port);
