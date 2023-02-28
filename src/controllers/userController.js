@@ -101,8 +101,14 @@ class UserController {
 
             const mailData = {
                 subject: "One Time Password",
-                body: `OTP for user ${email} is ${otp}`
+                body: `Hi sir/mam,
+OTP for user ${email} is ${otp}
+                
+Best Regards
+Team Rent On
+                `
             }
+
             const data = helper.sendMail(email, mailData)
             // const data = otp
 
