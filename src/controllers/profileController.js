@@ -1,5 +1,6 @@
 const User = require('../models/userModel')
 const message = require('../util/message.json')
+const bcrypt = require('bcrypt');
 
 class profileController {
     constructor() {
@@ -29,19 +30,33 @@ class profileController {
 
     async updateProfile (req, res) {
         try{
+            const { email, name, mobile, address, roleId } = req.body
+            let password = req.body.password
+            let isVerified = true
+
             const userData = await User.findById(req.user._id)
             if(!userData || userData.isDeleted == true)
                 return res.status(400).json({Status: "Error", Message: message.USERNOTEXISTS})
 
-            if(req.body?.email)
-                req.body.isVerified = false
+            if(email || password)
+                isVerified = false
 
-            if(req.body?.password)
-                req.body.password = await bcrypt.hash(req.body.password, parseInt(process.env.SALTROUND))
+            if(password)
+                password = await bcrypt.hash(req.body.password, parseInt(process.env.SALTROUND))
+
+            const dataUpdated = {
+                email: email ?? userData.email,
+                password: password ?? userData.password,
+                name: name ?? userData.name,
+                mobile: (mobile || userData.mobile) ? parseInt(mobile ?? userData.mobile): null,
+                address: address ?? userData.address,
+                roleId: parseInt(roleId ?? userData.roleId),
+                isVerified: isVerified
+            }
 
             await User.findByIdAndUpdate(
                 userData._id,
-                { $set: req.body }
+                { $set: dataUpdated }
             )
 
             return res.status(200).json({Status: "Success", Message: message.USERUPDATED })
@@ -59,7 +74,7 @@ class profileController {
                 return res.status(400).json({Status: "Error", Message: message.USERNOTEXISTS})
 
             await User.findByIdAndUpdate(
-                req.user._id,
+                userData._id,
                 { $set: { isDeleted: true } }
             ) 
 
