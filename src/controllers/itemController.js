@@ -12,23 +12,28 @@ class itemController {
 
     async itemCreate(req, res) {
         try {
+            let { items } = req.body
+
             if (parseInt(req.user.roleId) !== 2 && parseInt(req.user.roleId) !== 4)
                 return res.status(401).json({ Status: "Error", Message: message.SELLERROLE })
 
-            const iFDefaulter = await Defaulter.findById(req.user._id)
+            const iFDefaulter = await Defaulter.findOne({
+                userId: req.user._id,
+                isDeleted: false
+            })
             if (iFDefaulter)
                 return res.status(400).json({ Status: "Error", Message: message.DEFAULTER })
 
-            const items = []
-            for (let item of req.body.items)
-                items.push({
-                    itemName: item.itemName,
-                    description: item.description ?? null,
-                    userId: req.user._id,
-                    quantity: item.quantity ?? 1,
-                    rentFrequency: item.rentFrequency,
-                    price: item.price
-                })
+            items.map(el => el.userId = req.user._id) 
+            // for (let item of req.body.items)
+            // //     items.push({
+            //         itemName: item.itemName,
+            //         description: item.description ?? null,
+            //         userId: req.user._id,
+            //         quantity: item.quantity ?? 1,
+            //         rentFrequency: item.rentFrequency,
+            //         price: item.price
+            //     })
 
             const result = await Items.insertMany(items)
 
@@ -42,19 +47,28 @@ class itemController {
 
     async itemList(req, res) {
         try {
-            const filter = req.body.filter
+            const filter = { ...req.body.filter, userId: req.user._id, isDeleted: false }
             const sort = req.body.sort ?? { createdAt: -1 }
             const pageSize = req.body.pageSize ?? 10
             const page = req.body.page ?? 1
+            const options = {
+                sort: sort,
+                offset: pageSize * (page - 1),
+                limit: pageSize,
+            }
+
+            if(filter?.itemName) {
+                filter.itemName = new RegExp(filter.itemName, 'i') 
+            }
 
             const iFDefaulter = await Defaulter.findById(req.user._id)
             if (iFDefaulter)
                 return res.status(400).json({ Status: "Error", Message: message.DEFAULTER })
             
-            const data = await Items.find(filter).skip(pageSize * page).limit(pageSize)
+            const data = await Items.paginate(filter, options)
             const total = await Items.find(filter).count()
 
-            return res.status(200).json({Status: "Success", Message: message.DATALIST, Total: total, Data: data})
+            return res.status(200).json({Status: "Success", Message: message.DATALIST, Total: total, Data: data.docs})
         }
         catch (err) {
             console.log("Some Error Occurred: ", err.message)
@@ -68,15 +82,16 @@ class itemController {
             if (parseInt(req.user.roleId) !== 2 && parseInt(req.user.roleId) !== 4)
                 return res.status(401).json({ Status: "Error", Message: message.SELLERROLE })
 
-            const dataExist = Items.findById(id)
+            const dataExist = await Items.findOne({ _id: id, userId: req.user._id })
             if (!dataExist || dataExist.isDeleted == true)
                 return res.status(400).json({ Status: "Error", Message: message.DATAMISSING })
 
-            await Items.findByIdAndUpdate(
+            const result = await Items.findByIdAndUpdate(
                 dataExist._id,
                 { $set: inputData }
             )
-            return res.status(200).json({ Status: "Success", Message: message.DATAUPDATE })
+
+            return res.status(200).json({ Status: "Success", Message: message.DATAUPDATE, Data: result })
         }
         catch (err) {
             console.log("Some Error Occurred: ", err.message)
@@ -89,7 +104,7 @@ class itemController {
             if (parseInt(req.user.roleId) !== 2 && parseInt(req.user.roleId) !== 4)
                 return res.status(401).json({ Status: "Error", Message: message.SELLERROLE })
 
-            const dataExist = Items.findById(req.body.id)
+            const dataExist = await Items.findOne({ _id: req.body.id, userId: req.user._id })
             if (!dataExist || dataExist.isDeleted == true)
                 return res.status(400).json({ Status: "Error", Message: message.DATAMISSING })
 
