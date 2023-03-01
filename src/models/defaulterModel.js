@@ -10,10 +10,10 @@ const defaulterSchema = new Schema(
             ref: 'User'
         },
         roleId: { type: Number, required: true },
-        itemId: {
+        aggrementId: {
             type: Schema.Types.ObjectId,
             required: true,
-            ref: 'Items'
+            ref: 'Aggrement'
         },
         reason: { type: String, required: true },
         isDeleted: {type: Boolean, default: false}

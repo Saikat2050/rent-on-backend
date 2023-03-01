@@ -16,6 +16,7 @@ const userSchema = new Schema(
         password: { type: String, required: true },
         address: { type: String, required: true },
         roleId: { type: Number, required: true },
+        rating: { type: Number, default: 10 },
         verificationCode: { type: String },
         isVerified: {type: Boolean, default: false},
         isDeleted: {type: Boolean, default: false}
