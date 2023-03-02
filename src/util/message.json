@@ -19,5 +19,6 @@
     "DEFAULTER": "Sorry, this service is not available. Please check after some time",
     "DATALIST": "Data fetched successfully",
     "OTPEXPIRED": "OTP is expired, Please resend the OTP",
-    "TOKEN": "Token validation failed"
+    "TOKEN": "Token validation failed",
+    "ITEMSOLD": "Item is sold"
 }
