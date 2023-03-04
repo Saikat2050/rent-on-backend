@@ -24,5 +24,7 @@
     "EMIPAID":"EMI paid successfully",
     "REVIEW": "Response is submitted successfully",
     "PAYMENTSUCCESS": "Payment received successfully",
-    "PAYMENTFAIL": "Payment Failed"
+    "PAYMENTFAIL": "Payment Failed",
+    "ADMINFORBIDDEN": "Admin sign up is forbidden",
+    "ROLENOTFOUND": "Role not found"
 }

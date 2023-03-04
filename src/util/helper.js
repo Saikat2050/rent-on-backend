@@ -9,8 +9,8 @@ const sendMail = async (mailId, data) => {
             from: `"Rent On Support" <${process.env.EMAIL_ID}>`, // sender address
             to: mailId, // list of receivers
             subject: data.subject, // Subject line
-            text: data.body, // plain text body
-            // html: "<b>Hello world?</b>"
+           // text: data.body, // plain text body
+            html: data.body
         });
 
         return info.messageId;
