@@ -22,5 +22,7 @@
     "TOKEN": "Token validation failed",
     "ITEMSOLD": "Item is sold",
     "EMIPAID":"EMI paid successfully",
-    "REVIEW": "Response is submitted successfully"
+    "REVIEW": "Response is submitted successfully",
+    "PAYMENTSUCCESS": "Payment received successfully",
+    "PAYMENTFAIL": "Payment Failed"
 }

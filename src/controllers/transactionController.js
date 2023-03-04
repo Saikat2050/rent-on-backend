@@ -10,6 +10,7 @@ class transactionController {
     constructor() {
         this.itemBuy = this.itemBuy.bind(this)
         this.itemEmi = this.itemEmi.bind(this)
+        this.payment = this.payment.bind(this)
     }
 
     async itemBuy(req, res) {
@@ -179,6 +180,17 @@ class transactionController {
             )
         
             return res.status(200).json({ Status: "Success", Message: message.EMIPAID })
+        }
+        catch (err) {
+            console.log("Some Error Occurred: ", err.message)
+            return res.status(400).json({ Status: "Error", Message: err.message })
+        }
+    }
+
+    async payment(req, res) {
+        try {
+
+            return res.status(200).json({ Status: "Success", Message: message.PAYMENTSUCCESS })
         }
         catch (err) {
             console.log("Some Error Occurred: ", err.message)
