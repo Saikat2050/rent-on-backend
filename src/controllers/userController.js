@@ -11,6 +11,7 @@ class UserController {
         this.signIn = this.signIn.bind(this)
         this.sendOtp = this.sendOtp.bind(this)
         this.verifyOtp = this.verifyOtp.bind(this)
+        this.changeOtp = this.changeOtp.bind(this)
     }
 
     async signUp(req, res) {
@@ -90,7 +91,7 @@ class UserController {
             if (!emailExists)
                 return res.status(400).json({ Status: "Error", Message: message.USERNOTEXISTS })
 
-            const otp = Math.floor((Math.random() * 9000) + 1000);
+            const otp = Math.floor((Math.random() * 900000) + 100000);
 
             const token = jwt.sign({ otp: otp }, process.env.SECRET, { expiresIn: 60 });
 
@@ -147,6 +148,32 @@ Team Rent On
         catch (err) {
             console.log("Some Error Occurred: ", err.message)
             return res.status(400).json({ Status: "Error", Message: (err.message === 'jwt expired') ? message.OTPEXPIRED : err.message })
+        }
+    }
+
+    async changeOtp(req, res) {
+        try {
+            const { email, newPassword } = req.body
+
+            const emailExists = await User.findOne({
+                email: email,
+                isDeleted: false
+            })
+            if (!emailExists)
+                return res.status(400).json({ Status: "Error", Message: message.USERNOTEXISTS })
+
+            const password = await bcrypt.hash(newPassword, parseInt(saltRounds))
+            
+            await User.findByIdAndUpdate(
+                emailExists._id,
+                { $set: { password: password } }
+            )
+
+            return res.status(200).json({ Status: "Success", Message: message.DATAUPDATE })
+        }
+        catch (err) {
+            console.log("Some Error Occurred: ", err.message)
+            return res.status(400).json({ Status: "Error", Message: err.message })
         }
     }
 }

@@ -9,6 +9,7 @@ const Paystr = require('../models/paymentStructureModel')
 class transactionController {
     constructor() {
         this.itemBuy = this.itemBuy.bind(this)
+        this.itemEmi = this.itemEmi.bind(this)
     }
 
     async itemBuy(req, res) {
@@ -18,7 +19,6 @@ class transactionController {
             from = from ? moment(from).format() : moment().format()
             to = moment(to).format()
 
-            let nextRentOn = null
             let value = null
             let unit = null
             const paystructure = []
@@ -100,6 +100,85 @@ class transactionController {
             })
         
             return res.status(200).json({ Status: "Success", Message: message.ITEMSOLD })
+        }
+        catch (err) {
+            console.log("Some Error Occurred: ", err.message)
+            return res.status(400).json({ Status: "Error", Message: err.message })
+        }
+    }
+
+    async itemEmi(req, res) {
+        try {
+            let { itemId } = req.body
+
+            const iFDefaulter = await Defaulter.findOne({
+                userId: req.user._id,
+                isDeleted: false
+            })
+            if (iFDefaulter)
+                return res.status(400).json({ Status: "Error", Message: message.DEFAULTER })
+
+            const itemData = await Items.findOne({
+                _id: req.body.itemId,
+                isDeleted: false
+            })
+            if (!itemData)
+                return res.status(400).json({ Status: "Error", Message: message.DATAMISSING })
+
+            //payment struncture find
+            const paystr = await Paystr.find({
+                itemId: itemId,
+                isDeleted: false
+            }).sort({
+                paymentDates: 1
+            })
+            if (!paystr) {
+                const aggrementUpdated = await Aggrement.findOneAndUpdate(
+                    {
+                        itemId: itemId,
+                        isDeleted: false
+                    },
+                    {
+                        $set: {
+                            itemReturnedDate: moment().format(),
+                            itemReturned: true,
+                        }
+                    }
+                )
+            }
+
+            const paystrId = paystr[0]
+            const paystrUpdated = await Paystr.findByIdAndUpdate(
+                paystrId._id,
+                {
+                    $set: {
+                        isDeleted: true
+                    }
+                }
+            )
+
+            //aggrement struncture update
+            const newAggrement = await Aggrement.find({
+                itemId: itemId,
+                isDeleted: false
+            })
+            if (!newAggrement)
+                return res.status(400).json({ Status: "Error", Message: message.DATAMISSING })
+            
+            const aggrementUpdated = await Aggrement.findOneAndUpdate(
+                {
+                    itemId: itemId,
+                    isDeleted: false
+                },
+                {
+                    $set: {
+                        lastRentPaid: moment().format(),
+                        nextRentOn: paystr[1].paymentDates,
+                    }
+                }
+            )
+        
+            return res.status(200).json({ Status: "Success", Message: message.EMIPAID })
         }
         catch (err) {
             console.log("Some Error Occurred: ", err.message)

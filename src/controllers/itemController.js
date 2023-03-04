@@ -1,6 +1,7 @@
 const message = require('../util/message.json')
 const Items = require('../models/itemsModel')
 const Defaulter = require('../models/defaulterModel')
+const Aggrement = require('../models/aggrementModel')
 
 class itemController {
     constructor() {
@@ -8,6 +9,7 @@ class itemController {
         this.itemList = this.itemList.bind(this)
         this.itemUpdate = this.itemUpdate.bind(this)
         this.itemDelete = this.itemDelete.bind(this)
+        this.getHistory = this.getHistory.bind(this)
     }
 
     async itemCreate(req, res) {
@@ -47,7 +49,10 @@ class itemController {
 
     async itemList(req, res) {
         try {
-            const filter = { ...req.body.filter, userId: req.user._id, isDeleted: false }
+            if (req.body.self) {
+                req.body.filter.userId = req.user._id
+            }
+            let filter = { ...req.body.filter, isDeleted: false }
             const sort = req.body.sort ?? { createdAt: -1 }
             const pageSize = req.body.pageSize ?? 10
             const page = req.body.page ?? 1
@@ -57,6 +62,9 @@ class itemController {
                 limit: pageSize,
             }
 
+            if(!filter?.userId)
+                filter = {...filter, $not: { userId: req.user._id }}
+                
             if(filter?.itemName) {
                 filter.itemName = new RegExp(filter.itemName, 'i') 
             }
@@ -113,6 +121,24 @@ class itemController {
                 { $set: { isDeleted: true } }
             )
             return res.status(200).json({ Status: "Success", Message: message.DATADELETED })
+        }
+        catch (err) {
+            console.log("Some Error Occurred: ", err.message)
+            return res.status(400).json({ Status: "Error", Message: err.message })
+        }
+    }
+
+    async getHistory(req, res) {
+        try {
+            const historyData = await Aggrement.paginate({
+                $or: [
+                    { from: req.user._id },
+                    { to: req.user._id }
+                ],
+                isDeleted: false
+            })
+
+            return res.status(200).json({Status: "Success", Message: message.DATALIST, Data: historyData.docs})
         }
         catch (err) {
             console.log("Some Error Occurred: ", err.message)

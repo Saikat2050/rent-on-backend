@@ -20,5 +20,7 @@
     "DATALIST": "Data fetched successfully",
     "OTPEXPIRED": "OTP is expired, Please resend the OTP",
     "TOKEN": "Token validation failed",
-    "ITEMSOLD": "Item is sold"
+    "ITEMSOLD": "Item is sold",
+    "EMIPAID":"EMI paid successfully",
+    "REVIEW": "Response is submitted successfully"
 }
