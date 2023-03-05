@@ -6,10 +6,10 @@ const Schema = mongoose.Schema;
 
 const paystrSchema = new Schema(
     {
-        aggrementId: {
+        itemId: {
             type: Schema.Types.ObjectId,
             required: true,
-            ref: 'Aggrement'
+            ref: 'Items'
         },
         userId: {
             type: Schema.Types.ObjectId,

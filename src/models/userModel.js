@@ -15,6 +15,8 @@ const userSchema = new Schema(
         mobile: { type: Number },
         password: { type: String, required: true },
         address: { type: String, required: true },
+        gender: { type: String, enum: ['male', 'female', 'others'] },
+        age: { type: Number },
         roleId: { type: Number, required: true },
         rating: { type: Number, default: 10 },
         verificationCode: { type: String },

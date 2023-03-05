@@ -24,6 +24,15 @@ const aggrementSchema = new Schema(
         purchaseAt: { type: Date, required: true, default: Date.now },
         itemReturnedDate: { type: Date },
         rentFrequency: { type: String, enum: ['daily', 'weekly', 'monthly', 'quarterly', 'half-yearly', 'yearly'], required: true },
+        lastRentPaid: { type: Date, required: true },
+        nextRentOn: { type: Date, required: true, default: Date.now },
+        itemReturned: { type: Boolean, required: true, default: false },
+        isOverTimed: {
+            type: Boolean,
+            required: true,
+            default: false
+        },
+        reason: { type: String },
         rentAmount: { type: Number, required: true },
         isDeleted: {type: Boolean, default: false}
     },  

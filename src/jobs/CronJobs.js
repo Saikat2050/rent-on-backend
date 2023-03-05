@@ -16,12 +16,7 @@ try {
 
     const mailData = {
         subject: "Payment Remainder",
-        body: `Hi sir/mam,
-Your Payment is due till today. Please clear your dues at earliest to enjoy our servies uninterruptedly
-        
-Best Regards
-Team Rent On
-`
+        body: `<p>Hi sir/ma'am,<br>Your Payment is due till today. Please clear your dues at earliest to enjoy our servies uninterruptedly<br><br>Best Regards<br>Team Rent On</p>`
 }
 
     const date1 = moment().subtract(5, 'days').format()

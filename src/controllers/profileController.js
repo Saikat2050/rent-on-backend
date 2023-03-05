@@ -19,7 +19,9 @@ class profileController {
                 email: userData.email,
                 mobile: userData.mobile,
                 address: userData.address,
-                roleId: userData.roleId }
+                roleId: userData.roleId,
+                gender: userData.gender,
+                age: userData.age }
             })
         }
         catch(err) {
@@ -30,7 +32,7 @@ class profileController {
 
     async updateProfile (req, res) {
         try{
-            const { email, name, mobile, address, roleId } = req.body
+            const { email, name, mobile, gender, age, address, roleId } = req.body
             let password = req.body.password
             let isVerified = true
 
@@ -38,7 +40,15 @@ class profileController {
             if(!userData || userData.isDeleted == true)
                 return res.status(400).json({Status: "Error", Message: message.USERNOTEXISTS})
 
-            if(email || password)
+            if(roleId) {
+                if(parseInt(roleId) === 1)
+                    return res.status(401).json({ Status: "Error", Message: message.ADMINFORBIDDEN })
+
+                if(parseInt(roleId) !== 2 && parseInt(roleId) !== 3 && parseInt(roleId) !== 4)
+                    return res.status(401).json({ Status: "Error", Message: message.ROLENOTFOUND })
+            }
+
+            if(email || password || roleId)
                 isVerified = false
 
             if(password)
