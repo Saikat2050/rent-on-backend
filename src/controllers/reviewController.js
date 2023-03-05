@@ -2,6 +2,7 @@ const Defaulter = require('../models/defaulterModel')
 const Aggrement = require('../models/aggrementModel')
 const Review = require('../models/reviewModel')
 const message = require('../util/message.json')
+const Items = require('../models/itemsModel')
 
 class reviewController {
 constructor () {
@@ -31,6 +32,7 @@ constructor () {
                 isDeleted: false
             })
             let result
+            let itemRatingValue
             if (!reviewExists) {
                 result = await Review.insertMany([{
                     itemId: itemExist.itemId,
@@ -38,6 +40,18 @@ constructor () {
                     ratingCount: rating ? 1 : 0,
                     reviews: review ? [review] : null 
                 }])
+
+                if (rating) {
+                    itemRatingValue = (parseInt(rating))*10
+                    const ItemRating = await Items.findOneAndUpdate({
+                        _id: itemExist.itemId,
+                        isDeleted: false
+                    },{
+                        $set: {
+                            rating: itemRatingValue
+                        }
+                    })
+                }
 
                 return res.status(200).json({ Status: "Success", Message: message.REVIEW, Data: result })
             }
@@ -61,6 +75,18 @@ constructor () {
                     }
                 }
             )
+
+            if (rating) {
+                itemRatingValue = (parseInt(rating)/parseInt(ratingCount))*10
+                const ItemRating = await Items.findOneAndUpdate({
+                    _id: itemExist.itemId,
+                    isDeleted: false
+                },{
+                    $set: {
+                        rating: itemRatingValue
+                    }
+                })
+            }
 
             return res.status(200).json({ Status: "Success", Message: message.REVIEW, Data: result })
         }
