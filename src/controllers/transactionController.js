@@ -189,6 +189,9 @@ class transactionController {
 
     async payment(req, res) {
         try {
+            const { paymentType, paymentAmount } = req.body
+
+            // use razorpay
 
             return res.status(200).json({ Status: "Success", Message: message.PAYMENTSUCCESS })
         }
@@ -197,6 +200,23 @@ class transactionController {
             return res.status(400).json({ Status: "Error", Message: err.message })
         }
     }
+
+   /* async notification(req, res) {
+        try {
+            let { itemId, from, to } = req.body
+
+            const mailData = {
+                subject: "Rent an Item request",
+                body: `<p>Hi sir/ma'am,<br>There is a rent request from one of our user from ${from ? moment(from).format('YYYY-MM-DD') : "today"} to ${moment(to).format("YYYY-MM-DD")}. You can either accept or decline the request.<br><a type="button" href="${process.env.RENTON_SITE}/transactions/"<br><br>Best Regards<br>Team Rent On</p>`
+            }
+
+            const data = helper.sendMail(email, mailData)
+        }
+        catch (err) {
+            console.log("Some Error Occurred: ", err.message)
+            return res.status(400).json({ Status: "Error", Message: err.message })
+        }
+    }*/
 }
 
 module.exports = new transactionController()
