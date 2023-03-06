@@ -15,6 +15,7 @@ class itemController {
     async itemCreate(req, res) {
         try {
             let { items } = req.body
+            const fileName = req.file
 
             if (parseInt(req.user.roleId) !== 2 && parseInt(req.user.roleId) !== 4)
                 return res.status(401).json({ Status: "Error", Message: message.SELLERROLE })
@@ -26,7 +27,7 @@ class itemController {
             if (iFDefaulter)
                 return res.status(400).json({ Status: "Error", Message: message.DEFAULTER })
 
-            items.map(el => el.userId = req.user._id) 
+            items.map(el => el.userId = req.user._id, el.image = fileName ?? null ) 
             // for (let item of req.body.items)
             // //     items.push({
             //         itemName: item.itemName,

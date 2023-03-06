@@ -19,6 +19,7 @@ const itemsSchema = new Schema(
             ref: 'User'
         },
         quantity: { type: Number, required: true, default: 1 },
+        image: { type: String },
         price: { type: Number, required: true, default: 100 },
         rentFrequency: { type: String, enum: ['daily', 'weekly', 'monthly', 'quarterly', 'half-yearly', 'yearly'], required: true },
         sold: { type: Boolean, required: true, default: false },
